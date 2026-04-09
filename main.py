@@ -9,7 +9,47 @@ from google.genai import types
 
 BACKGROUNDS_DIR = Path(__file__).parent / "backgrounds"
 OUTPUT_DIR = Path(__file__).parent / "output"
-PROMPT = "Extract the metadata and analyze the image techniques in JSON format."
+PROMPT = """Analyze this image and return a JSON object with exactly this structure:
+
+{
+  "metadata": {
+    "filename": "<original filename>",
+    "format": "<file format e.g. WEBP, JPEG, PNG>",
+    "color_space": "<e.g. RGB, Grayscale/Monochrome, CMYK>",
+    "aspect_ratio": "<e.g. 3:2, 16:9>",
+    "dimensions": "<width x height if detectable, otherwise estimated>",
+    "content_type": "<e.g. Photograph, 3D Render / Digital Art, Illustration>"
+  },
+  "visual_techniques": {
+    "composition": {
+      "style": "<compositional style e.g. Minimalist Surrealism, Rule of Thirds>",
+      "framing": "<how framing is used>",
+      "balance": "<symmetrical or asymmetrical, and how>",
+      "perspective": "<depth/perspective technique used>"
+    },
+    "lighting_and_shadow": {
+      "light_source": "<direction and quality of light e.g. Hard Light from left>",
+      "contrast": "<contrast technique e.g. High Chiaroscuro>",
+      "shadow_types": "<types of shadows present and their effect>"
+    },
+    "texture_and_materials": {
+      "surface_properties": [
+        "<material description 1>",
+        "<material description 2>"
+      ]
+    },
+    "architectural_elements": {
+      "geometry": "<geometric forms and their relationships>",
+      "symbolism": "<any symbolic or art-historical references>"
+    },
+    "color_theory": {
+      "palette": "<e.g. Monochromatic, Complementary, Analogous>",
+      "effect": "<how the palette affects the mood or focus>"
+    }
+  }
+}
+
+Fill in all fields accurately based on the image. For the filename field, use the placeholder '<filename>' as you do not have access to the file name."""
 MODEL = "gemini-2.5-flash-lite"
 REQUEST_DELAY = 4  # seconds between requests (~15 RPM free-tier limit)
 MAX_RETRIES = 3
@@ -82,6 +122,8 @@ def main():
 
         time.sleep(REQUEST_DELAY)
 
+        if isinstance(data.get("metadata"), dict):
+            data["metadata"]["filename"] = image_path.name
         output_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
         print(f"saved to {output_path.relative_to(Path(__file__).parent)}")
 
