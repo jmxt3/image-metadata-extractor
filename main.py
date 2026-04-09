@@ -13,12 +13,9 @@ PROMPT = """Analyze this image and return a JSON object with exactly this struct
 
 {
   "metadata": {
-    "filename": "<original filename>",
-    "format": "<file format e.g. WEBP, JPEG, PNG>",
     "color_space": "<e.g. RGB, Grayscale/Monochrome, CMYK>",
     "aspect_ratio": "<e.g. 3:2, 16:9>",
-    "dimensions": "<width x height if detectable, otherwise estimated>",
-    "content_type": "<e.g. Photograph, 3D Render / Digital Art, Illustration>"
+    "dimensions": "<width x height if detectable, otherwise estimated>"
   },
   "visual_techniques": {
     "composition": {
@@ -49,7 +46,7 @@ PROMPT = """Analyze this image and return a JSON object with exactly this struct
   }
 }
 
-Fill in all fields accurately based on the image. For the filename field, use the placeholder '<filename>' as you do not have access to the file name."""
+Fill in all fields accurately based on the image."""
 MODEL = "gemini-2.5-flash-lite"
 REQUEST_DELAY = 4  # seconds between requests (~15 RPM free-tier limit)
 MAX_RETRIES = 3
@@ -122,8 +119,6 @@ def main():
 
         time.sleep(REQUEST_DELAY)
 
-        if isinstance(data.get("metadata"), dict):
-            data["metadata"]["filename"] = image_path.name
         output_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
         print(f"saved to {output_path.relative_to(Path(__file__).parent)}")
 
