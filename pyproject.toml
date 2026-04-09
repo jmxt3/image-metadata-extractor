@@ -1,0 +1,12 @@
+[project]
+name = "image-metadata-extractor"
+version = "0.1.0"
+description = "Image Metadata Extractor"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "google-genai>=1.71.0",
+    "pillow>=12.2.0",
+    "python-dotenv>=1.2.2",
+    "python-multipart>=0.0.24",
+]
