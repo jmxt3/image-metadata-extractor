@@ -15,7 +15,10 @@ POLL_INTERVAL = 15  # seconds between polling
 
 def build_prompt(json_content: str) -> str:
     return (
-        f"Build a new image 16:9 based on the following json: {json_content}. "
+        f"Build a new 16:9 image based on the following json: {json_content}. "
+        "Minimalist Surrealism / Abstract Digital Art"
+        "Muted colors, Triadic-leaning scheme featuring vibrant colors"
+        "Low-noise, stylized grain applied without breaking the minimalist aesthetic"
         "Do not include any text, words, letters, numbers, symbols, watermarks, or typography in the image."
     )
 
